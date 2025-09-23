@@ -1,20 +1,22 @@
 # back/Dockerfile
-FROM node:20
-
-# Set working directory
+FROM node:20-bookworm AS deps
+# Native deps for sharp & admin build
+RUN apt-get update && apt-get install -y python3 build-essential libvips \
+ && rm -rf /var/lib/apt/lists/*
 WORKDIR /srv/app
-
-# Copy package.json and lock file
 COPY package*.json ./
+RUN npm ci
 
-# Install dependencies including Strapi
-RUN npm install
-
-# Copy the rest of the project
+FROM deps AS build
+WORKDIR /srv/app
 COPY . .
+# Build Strapi (compiles admin for prod)
+RUN npm run build
 
-# Expose the Strapi port
+FROM node:20-bookworm AS runner
+WORKDIR /srv/app
+COPY --from=deps /srv/app/node_modules ./node_modules
+COPY --from=build /srv/app ./
+ENV NODE_ENV=production
 EXPOSE 1337
-
-# Start Strapi
-CMD ["npm", "run", "develop"]
+CMD ["npm", "run", "start"]
