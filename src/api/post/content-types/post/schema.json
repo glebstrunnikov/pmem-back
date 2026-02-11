@@ -26,6 +26,15 @@
       "required": true,
       "unique": true
     },
+    "subtitle": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "maxLength": 200
+    },
     "lead": {
       "type": "text",
       "pluginOptions": {
@@ -88,6 +97,14 @@
       "relation": "manyToMany",
       "target": "api::tag.tag",
       "inversedBy": "posts"
+    },
+    "mainDate": {
+      "type": "datetime",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     }
   }
 }

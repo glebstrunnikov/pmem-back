@@ -16,6 +16,8 @@ export default [
     config: {
       jsonLimit: "100mb",
       formLimit: "100mb",
+      textLimit: '200mb',
+      formidable: { maxFileSize: 200 * 1024 * 1024 },
     },
   },
   "strapi::session",
